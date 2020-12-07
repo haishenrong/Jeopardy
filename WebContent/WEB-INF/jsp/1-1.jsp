@@ -29,7 +29,7 @@ td {
 			<table border="1" cellpadding="5" >
 				<c:forEach var="clue" items="${clues.rows}">
 					<tr>
-						<td width="250" height="250" align="center">${clue.prompt}</td>
+						<td width="750" height="250" align="center">${clue.prompt}</td>
 					</tr>
 				</c:forEach>
 			</table>
@@ -39,7 +39,7 @@ td {
 	<tr>
 			<c:forEach var="score" items="${scores}">
 				
-				<td  width = "250" height = "75"
+				<td  width = "200" height = "50"
 				
 				 align = "center">${score}</td>
 				
@@ -48,8 +48,9 @@ td {
 	<tr>
 			<c:forEach var="player" items="${players}">
 				
-				<td  width = "250" height = "300" align = "center">
-				<button type="submit" style ="width : 230px; height: 290px;" name="playerSelect" value="${player}"><p style="font-size:30px; font-family:'Courier New'">${player}</p></button>
+				<td  width = "200" height = "50" align = "center">
+				<button type="submit" style ="width : 130px; height: 40px;" name="playerSelect" value="${player}${clues.rows[0].difficulty}"><p style="font-size:13px; font-family:'Courier New'">${player} Right</p></button>
+				<button type="submit" style ="width : 130px; height: 40px;" name="playerWrong" value="${player}${clues.rows[0].difficulty}"><p style="font-size:13px; font-family:'Courier New'">${player} Wrong</p></button>
 				</td>
 				
 			</c:forEach>
@@ -59,7 +60,7 @@ td {
 
 		<tr>
 			<td colspan="2" align="center"><input type="submit"
-				class="button" name="playerSelect" value="return" /> </td>
+				class="button" name="returnt" value="return" /> </td>
 		</tr>
 
 	</form:form>
@@ -69,10 +70,12 @@ td {
 			<tr>
 				<td height="250" align="center"><div style="visibility: hidden"
 						id="myDIV">${clue.response}</div></td>
+				
 			</tr>
+			
 		</c:forEach>
 	</table>
-	<button onclick="myFunction()" align="center">Show/Hide
+	<button onclick="myFunction()" align="center" >Show/Hide
 		Correct Response</button>
 </div>
 	<script>

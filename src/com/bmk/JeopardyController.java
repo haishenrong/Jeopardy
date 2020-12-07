@@ -28,7 +28,9 @@ import java.sql.SQLException;
 public class JeopardyController {
 	Clue bob;
 	Clue billy;
-	boolean[] oO = new boolean[25];
+	int target;
+	boolean[] oO = new boolean[51];
+	int count = 48;
 	String[] names = new String[]{"Kevin", "Bryan", "Matthew"};
 	int[] scores = new int[] {0,0,0};
 	String disabled = "00000000000000000000";
@@ -38,7 +40,7 @@ public class JeopardyController {
 	
 	@RequestMapping(value = "/start", method = RequestMethod.GET, params={"!replace", "!main"})
 	public ModelAndView clue() {
-		
+
 		return new ModelAndView("clue", "command", new FiveClues());
 	}
 
@@ -122,6 +124,12 @@ public class JeopardyController {
 	public String main() {
 		return "redirect:/start";
 	}
+	@RequestMapping(value = "/select", method = RequestMethod.GET, params={"return"})
+	public String retMain() {
+		oO = new boolean[51];
+		count = 0;
+		return "redirect:/start";
+	}
 	@RequestMapping(value = "/start", method = RequestMethod.GET, params={"!replace", "!return"})
 	public ModelAndView start() {
 		scores = new int[] {0,0,0};
@@ -174,33 +182,138 @@ public class JeopardyController {
 	    return "finishedLoading";
 	}
 	@RequestMapping(value = "select", method = RequestMethod.GET, params = "playerSelect")
-	public String returnGame(HttpServletRequest request) {
+	public String returnGame(HttpServletRequest request, Model model) {
 		String p = request.getParameter("playerSelect");
+		//System.out.println("Hello"+p);
+		//String val = request.getParameter("clueVal");
 		//int value = request.getParameter(clues);
-		if(!p.contentEquals("return")) {
-			for(int i = 0; i<names.length;i++)
-			{
-				if(names[i].equals(p))
+		if(count <25)
+		{
+			if(!p.contentEquals("return")) {
+				for(int i = 0; i<names.length;i++)
 				{
-					scores[i] = scores[i]+100;
+					if(names[i].equals(p.substring(0,p.length()-1)))
+					{
+						scores[i] = scores[i]+200*Integer.parseInt(p.substring(p.length()-1));
+					}
 				}
 			}
+			model.addAttribute("players", names);
+			model.addAttribute("scores", scores);
+			model.addAttribute("oO", oO);
+			return "redirect:/start?randStart=Start+a+random+game";
 		}
-		return "redirect:/start?randStart=Start+a+random+game";
+		if(count<50) {
+			if(!p.contentEquals("return")) {
+				for(int i = 0; i<names.length;i++)
+				{
+					if(names[i].equals(p.substring(0,p.length()-1)))
+					{
+						scores[i] = scores[i]+400*Integer.parseInt(p.substring(p.length()-1));
+					}
+				}
+			}
+			model.addAttribute("players", names);
+			model.addAttribute("scores", scores);
+			model.addAttribute("oO", oO);
+
+			//model.addAttribute("clueKey",target);
+			return"2-1";
+		}
+		else
+		{
+			if(!p.contentEquals("return")) {
+				for(int i = 0; i<names.length;i++)
+				{
+					if(names[i].equals(p.substring(0,p.length()-1)))
+					{
+						scores[i] = scores[i]+400*Integer.parseInt(p.substring(p.length()-1));
+					}
+				}
+			}
+			model.addAttribute("players", names);
+			model.addAttribute("scores", scores);
+			model.addAttribute("oO", oO);
+			return "1-2";
+		}
+		
 	}
 	// for all clue selects
 	@RequestMapping(value = "selected", method = RequestMethod.GET, params = "clueSelect")
 	public String oneOne(HttpServletRequest request, Model model) {
-		int target = Integer.parseInt(request.getParameter("clueSelect"));
+		target = Integer.parseInt(request.getParameter("clueSelect"));
 		//disabled = disabled.substring(0,target)+'1'+disabled.substring(target+1);
 		//model.addAttribute("disabled",disabled);
 		//model.addAttribute("1",oO);
 		model.addAttribute("players", names);
 		model.addAttribute("scores", scores);
+		count++;
 		oO[target]=true;
 		model.addAttribute("clueKey",target);
 		return "1-1";
 	}
+	@RequestMapping(value = "select", method = RequestMethod.GET, params = "playerWrong")
+	public String stayClue(HttpServletRequest request, Model model) {
+		String p = request.getParameter("playerWrong");
+		model.addAttribute("clueKey",target);
+		
+		//System.out.println("Hello"+p);
+		//String val = request.getParameter("clueVal");
+		//int value = request.getParameter(clues);
+		if(count <25)
+		{
+			if(!p.contentEquals("return")) {
+				for(int i = 0; i<names.length;i++)
+				{
+					if(names[i].equals(p.substring(0,p.length()-1)))
+					{
+						scores[i] = scores[i]-200*Integer.parseInt(p.substring(p.length()-1));
+					}
+				}
+			}
+			model.addAttribute("players", names);
+			model.addAttribute("scores", scores);
+			model.addAttribute("oO", oO);
+			return "1-1";
+		}
+		else{
+			if(!p.contentEquals("return")) {
+				for(int i = 0; i<names.length;i++)
+				{
+					if(names[i].equals(p.substring(0,p.length()-1)))
+					{
+						scores[i] = scores[i]-400*Integer.parseInt(p.substring(p.length()-1));
+					}
+				}
+			}
+			model.addAttribute("players", names);
+			model.addAttribute("scores", scores);
+			model.addAttribute("oO", oO);
+
+			//model.addAttribute("clueKey",target);
+			return"1-1";
+		}
+	}
+	//Results after Final Jeopardy
+	@RequestMapping(value = "select", method = RequestMethod.GET, params = "playerLock")
+	public String endGame(HttpServletRequest request, Model model) {
+		//String[] correct=request.getParameterValues("correct");;
+		String correct;
+		String[] wagers= request.getParameterValues("wager");
+		for(int i = 0;i<names.length;i++)
+		{
+			correct = request.getParameter(names[i]+"correct");
+			//System.out.println(correct[i]);
+			if(correct==null)
+				scores[i]=scores[i]-Integer.parseInt(wagers[i]);
+			else
+				scores[i]=scores[i]+Integer.parseInt(wagers[i]);
+		}
+		model.addAttribute("players", names);
+		model.addAttribute("scores", scores);
+	return "results";
+	}
+	
 
 
 }

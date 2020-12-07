@@ -54,7 +54,7 @@ input[type = submit] {
             	<form action="selected" method="GET">
                 	<td width="125"  height="75" align = "center">
                 	<c:if test= "${!oO[clue.id]}">
-                	<button type="submit" style ="width: 200px; height: 75px;" name="clueSelect" value="${clue.id}">${clue.difficulty*100}</button>
+                	<button type="submit" style ="width: 200px; height: 75px;" name="clueSelect" value="${clue.id}">${clue.difficulty*400}</button>
                 	</c:if>
                 	</td>
                 </form>
@@ -65,7 +65,7 @@ input[type = submit] {
                 <form action="selected" method="GET">
                 	<td width="125" height="75" align = "center">
                 	<c:if test= "${!oO[clue.id]}">
-                	<button type="submit" style ="width: 200px; height: 75px;" name="clueSelect" value="${clue.id}">${clue.difficulty*100}</button>
+                	<button type="submit" style ="width: 200px; height: 75px;" name="clueSelect" value="${clue.id}">${clue.difficulty*400}</button>
                 	</c:if>
                 	</td>
                 </form>
@@ -76,7 +76,7 @@ input[type = submit] {
                 <form action="selected" method="GET">
                 	<td width="125" height="75" align = "center">
                 	<c:if test= "${!oO[clue.id]}">
-                	<button type="submit" style ="width: 200px; height: 75px;" name="clueSelect" value="${clue.id}">${clue.difficulty*100}</button>
+                	<button type="submit" style ="width: 200px; height: 75px;" name="clueSelect" value="${clue.id}">${clue.difficulty*400}</button>
                 	</c:if>
                 	</td>
                 </form>
@@ -87,7 +87,7 @@ input[type = submit] {
                 <form action="selected" method="GET">
                 	<td width="125" height="75" align = "center">
                 	<c:if test= "${!oO[clue.id]}">
-                	<button type="submit" style ="width: 200px; height: 75px;" name="clueSelect" value="${clue.id}">${clue.difficulty*100}</button>
+                	<button type="submit" style ="width: 200px; height: 75px;" name="clueSelect" value="${clue.id}">${clue.difficulty*400}</button>
                 	</c:if>
                 	</td>
                 </form>
@@ -98,7 +98,7 @@ input[type = submit] {
                 <form action="selected" method="GET">
                 	<td width="125" height="75" align = "center">
                 	<c:if test= "${!oO[clue.id]}">
-                	<button type="submit" style =" width: 200px; height: 75px;" name="clueSelect" value="${clue.id}">${clue.difficulty*100}</button>
+                	<button type="submit" style =" width: 200px; height: 75px;" name="clueSelect" value="${clue.id}">${clue.difficulty*400}</button>
                 	</c:if>
                 	</td>
                 </form>

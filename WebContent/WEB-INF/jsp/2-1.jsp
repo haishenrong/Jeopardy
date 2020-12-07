@@ -8,54 +8,140 @@
 <html>
 <head>
 <meta charset="ISO-8859-1">
-<title>Insert title here</title>
+<title>Rand</title>
 <style>
-td {
+input[type = submit] {
  text-align:center
+ width: 120;  height: 70;
 }
 </style>
 </head>
+
 <body>
-<h2>Clue</h2>
 	<sql:setDataSource var="myDS" driver="com.mysql.jdbc.Driver"
 		url="jdbc:mysql://localhost:3306/TEST" user="root" password="" />
-	<sql:query var="clues" dataSource="${myDS}">
-        SELECT * FROM CLUE WHERE ID = 6;
+
+
+<sql:query var="listClue1" dataSource="${myDS}">
+        SELECT * FROM CLUE where DIFFICULTY=1 AND ID >25 LIMIT 5;
     </sql:query>
-    	<form:form method="GET" action="/Jeopardy/select">
-
-		<table>
-
-			<c:forEach var="clue" items="${clues.rows}">
-                <tr>
-				<td>${clue.prompt}</td>
-				</tr>
-				<tr>
-				<td><div  style = "display:none" id="myDIV">${clue.response}</div></td>
-				</tr>
+<sql:query var="listClue2" dataSource="${myDS}">
+        SELECT * FROM CLUE where DIFFICULTY=2 AND ID >25 LIMIT 5;
+    </sql:query>
+<sql:query var="listClue3" dataSource="${myDS}">
+        SELECT * FROM CLUE where DIFFICULTY=3 AND ID >25 LIMIT 5;
+    </sql:query>
+<sql:query var="listClue4" dataSource="${myDS}">
+        SELECT * FROM CLUE where DIFFICULTY=4 AND ID >25 LIMIT 5;
+    </sql:query>
+<sql:query var="listClue5" dataSource="${myDS}">
+        SELECT * FROM CLUE where DIFFICULTY=5 AND ID >25 LIMIT 5;
+    </sql:query>
+<sql:query var="listCategory" dataSource="${myDS}">
+        SELECT DISTINCT CATEGORY FROM CLUE WHERE ID>25 LIMIT 5;
+    </sql:query>
+    
+        <div align="center">
+        <table border="1" cellpadding="5">
+            <caption><h2>Double Jeopardy</h2></caption>
+            <tr>
+            	<c:forEach var="category" items="${listCategory.rows}">
+                	<th><c:out value="${category.category}" /></th>
+            	</c:forEach>
+            </tr>
+            <tr>
+            	<c:forEach var="clue" items="${listClue1.rows}">
+            	<form action="selected" method="GET">
+                	<td width="125"  height="75" align = "center">
+                	<c:if test= "${!oO[clue.id]}">
+                	<button type="submit" style ="width: 200px; height: 75px;" name="clueSelect" value="${clue.id}">${clue.difficulty*400}</button>
+                	</c:if>
+                	</td>
+                </form>
+            	</c:forEach>
+            </tr>
+            <tr>
+            	<c:forEach var="clue" items="${listClue2.rows}">
+                <form action="selected" method="GET">
+                	<td width="125" height="75" align = "center">
+                	<c:if test= "${!oO[clue.id]}">
+                	<button type="submit" style ="width: 200px; height: 75px;" name="clueSelect" value="${clue.id}">${clue.difficulty*400}</button>
+                	</c:if>
+                	</td>
+                </form>
+            	</c:forEach>
+            </tr>
+            <tr>
+            	<c:forEach var="clue" items="${listClue3.rows}">
+                <form action="selected" method="GET">
+                	<td width="125" height="75" align = "center">
+                	<c:if test= "${!oO[clue.id]}">
+                	<button type="submit" style ="width: 200px; height: 75px;" name="clueSelect" value="${clue.id}">${clue.difficulty*400}</button>
+                	</c:if>
+                	</td>
+                </form>
+            	</c:forEach>
+            </tr>
+            <tr>
+            	<c:forEach var="clue" items="${listClue4.rows}">
+                <form action="selected" method="GET">
+                	<td width="125" height="75" align = "center">
+                	<c:if test= "${!oO[clue.id]}">
+                	<button type="submit" style ="width: 200px; height: 75px;" name="clueSelect" value="${clue.id}">${clue.difficulty*400}</button>
+                	</c:if>
+                	</td>
+                </form>
+            	</c:forEach>
+            </tr>
+            <tr>
+            	<c:forEach var="clue" items="${listClue5.rows}">
+                <form action="selected" method="GET">
+                	<td width="125" height="75" align = "center">
+                	<c:if test= "${!oO[clue.id]}">
+                	<button type="submit" style =" width: 200px; height: 75px;" name="clueSelect" value="${clue.id}">${clue.difficulty*400}</button>
+                	</c:if>
+                	</td>
+                </form>
+            	</c:forEach>
+            </tr>
+        </table>
+    
+	<table border="1" cellpadding="5">
+	<tr>
+			<c:forEach var="score" items="${scores}">
+				
+				<td  width = "250" height = "75"
+				
+				 align = "center">${score}</td>
+				
 			</c:forEach>
-		</table>
-		
-		<tr>
+	</tr>
+	<tr>
+			<c:forEach var="player" items="${players}">
+				
+				<td  width = "250" height = "300" align = "center"><p style="font-size:30px; font-family:'Courier New'">${player}</p></td>
+				
+			</c:forEach>
+	</tr>
+			
+	</table>
+    <form:form method="GET" action="/Jeopardy/clue">
+    <tr>
 			<td colspan="2">
-			<input type="submit" class="button" name="return" value="return" />
+			<input type="submit" class="button" name="main" value="back" />
 			</td>
-		</tr>
-		
+	</tr>
 	</form:form>
-	<button onclick="myFunction()">Show/Hide</button>
-<script>
+	</div>
+	<script>
 
-function myFunction() {
-	  var x = document.getElementById("myDIV");
-	  if (x.style.display === "none") {
-	    x.style.display = "block";
-	  } else {
-	    x.style.display = "none";
-	  }
+	function myFunction(clueId) {
+	  var x = disabled.charAt(clueId);
+	  print(clueId);
+	  if(x==='0')
+		  return true;
+	  else
+		  return false;
 	}
-</script>
-
-		
-</body>
-</html>
+	</script>
+    </body>
