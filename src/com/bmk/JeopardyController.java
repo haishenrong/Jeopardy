@@ -30,8 +30,9 @@ public class JeopardyController {
 	Clue billy;
 	int target;
 	boolean[] oO = new boolean[51];
-	int count = 48;
+	int count = 0;
 	String[] names = new String[]{"Kevin", "Bryan", "Matthew"};
+	boolean[] playButtons = new boolean[] {true, true, true};
 	int[] scores = new int[] {0,0,0};
 	String disabled = "00000000000000000000";
 	String loadClues = "";
@@ -181,7 +182,7 @@ public class JeopardyController {
 		}
 	    return "finishedLoading";
 	}
-	@RequestMapping(value = "select", method = RequestMethod.GET, params = "playerSelect")
+	@RequestMapping(value = "/select", method = RequestMethod.GET, params = "playerSelect")
 	public String returnGame(HttpServletRequest request, Model model) {
 		String p = request.getParameter("playerSelect");
 		//System.out.println("Hello"+p);
@@ -250,9 +251,11 @@ public class JeopardyController {
 		count++;
 		oO[target]=true;
 		model.addAttribute("clueKey",target);
+		playButtons = new boolean[] {true, true, true};
+		model.addAttribute("playButtons", playButtons);
 		return "1-1";
 	}
-	@RequestMapping(value = "select", method = RequestMethod.GET, params = "playerWrong")
+	@RequestMapping(value = "/select", method = RequestMethod.GET, params = "playerWrong")
 	public String stayClue(HttpServletRequest request, Model model) {
 		String p = request.getParameter("playerWrong");
 		model.addAttribute("clueKey",target);
@@ -265,8 +268,9 @@ public class JeopardyController {
 			if(!p.contentEquals("return")) {
 				for(int i = 0; i<names.length;i++)
 				{
-					if(names[i].equals(p.substring(0,p.length()-1)))
+					if(names[i].equals(p.substring(0,p.length()-1))&&playButtons[i]==true)
 					{
+						playButtons[i]=false;
 						scores[i] = scores[i]-200*Integer.parseInt(p.substring(p.length()-1));
 					}
 				}
@@ -274,14 +278,16 @@ public class JeopardyController {
 			model.addAttribute("players", names);
 			model.addAttribute("scores", scores);
 			model.addAttribute("oO", oO);
+			model.addAttribute("playButtons", playButtons);
 			return "1-1";
 		}
 		else{
 			if(!p.contentEquals("return")) {
 				for(int i = 0; i<names.length;i++)
 				{
-					if(names[i].equals(p.substring(0,p.length()-1)))
+					if(names[i].equals(p.substring(0,p.length()-1))&&playButtons[i]==true)
 					{
+						playButtons[i]=false;
 						scores[i] = scores[i]-400*Integer.parseInt(p.substring(p.length()-1));
 					}
 				}
@@ -289,7 +295,7 @@ public class JeopardyController {
 			model.addAttribute("players", names);
 			model.addAttribute("scores", scores);
 			model.addAttribute("oO", oO);
-
+			model.addAttribute("playButtons", playButtons);
 			//model.addAttribute("clueKey",target);
 			return"1-1";
 		}
